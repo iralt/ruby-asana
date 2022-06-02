@@ -184,7 +184,7 @@ module Asana
         # Get multiple tasks
         #
 
-        # assignee - [str]  The assignee to filter tasks on. *Note: If you specify `assignee`, you must also specify the `workspace` to filter on.*
+        # assignee - [str]  The assignee to filter tasks on. If searching for unassigned tasks, assignee.any = null can be specified. *Note: If you specify `assignee`, you must also specify the `workspace` to filter on.*
         # project - [str]  The project to filter tasks on.
         # section - [str]  The section to filter tasks on. *Note: Currently, this is only supported in board views.*
         # workspace - [str]  The workspace to filter tasks on. *Note: If you specify `workspace`, you must also specify the `assignee` to filter on.*

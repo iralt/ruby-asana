@@ -5,65 +5,66 @@ require_relative '../../resource_includes/response_helper'
 
 module Asana
   module Resources
-    class StatusUpdatesBase < Resource
+    class ProjectTemplatesBase < Resource
 
       def self.inherited(base)
         Registry.register(base)
       end
 
       class << self
-        # Create a status update
+        # Get a project template
         #
-
-        # options - [Hash] the request I/O options
-        # > offset - [str]  Offset token. An offset to the next page returned by the API. A pagination request will return an offset token, which can be used as an input parameter to the next request. If an offset is not passed in, the API will return the first page of results. 'Note: You can only pass in an offset that was returned to you via a previously paginated request.'
-        # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
-        # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
-        # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-        # data - [Hash] the attributes to POST
-        def create_status_for_object(client, options: {}, **data)
-          path = "/status_updates"
-          parse(client.post(path, body: data, options: options)).first
-        end
-
-        # Delete a status update
-        #
-        # status_gid - [str]  (required) The status update to get.
+        # project_template_gid - [str]  (required) Globally unique identifier for the project template.
         # options - [Hash] the request I/O options
         # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
         # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-        def delete_status(client, status_gid: required("status_gid"), options: {})
-          path = "/status_updates/{status_gid}"
-          path["{status_gid}"] = status_gid
-          parse(client.delete(path, options: options)).first
-        end
-
-        # Get a status update
-        #
-        # status_gid - [str]  (required) The status update to get.
-        # options - [Hash] the request I/O options
-        # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
-        # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-        def get_status(client, status_gid: required("status_gid"), options: {})
-          path = "/status_updates/{status_gid}"
-          path["{status_gid}"] = status_gid
+        def get_project_template(client, project_template_gid: required("project_template_gid"), options: {})
+          path = "/project_templates/{project_template_gid}"
+          path["{project_template_gid}"] = project_template_gid
           parse(client.get(path, options: options)).first
         end
 
-        # Get status updates from an object
+        # Get multiple project templates
         #
 
-        # parent - [str]  (required) Globally unique identifier for object to fetch statuses from. Must be a GID for a project, portfolio, or goal.
-        # created_since - [datetime]  Only return statuses that have been created since the given time.
+        # workspace - [str]  The workspace to filter results on.
+        # team - [str]  The team to filter projects on.
         # options - [Hash] the request I/O options
         # > offset - [str]  Offset token. An offset to the next page returned by the API. A pagination request will return an offset token, which can be used as an input parameter to the next request. If an offset is not passed in, the API will return the first page of results. 'Note: You can only pass in an offset that was returned to you via a previously paginated request.'
         # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
         # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
         # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-        def get_statuses_for_object(client, parent: nil, created_since: nil, options: {})
-          path = "/status_updates"
-          params = { parent: parent, created_since: created_since }.reject { |_,v| v.nil? || Array(v).empty? }
+        def get_project_templates(client, workspace: nil, team: nil, options: {})
+          path = "/project_templates"
+          params = { workspace: workspace, team: team }.reject { |_,v| v.nil? || Array(v).empty? }
           Collection.new(parse(client.get(path, params: params, options: options)), type: Resource, client: client)
+        end
+
+        # Get a team's project templates
+        #
+        # team_gid - [str]  (required) Globally unique identifier for the team.
+        # options - [Hash] the request I/O options
+        # > offset - [str]  Offset token. An offset to the next page returned by the API. A pagination request will return an offset token, which can be used as an input parameter to the next request. If an offset is not passed in, the API will return the first page of results. 'Note: You can only pass in an offset that was returned to you via a previously paginated request.'
+        # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
+        # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
+        # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
+        def get_project_templates_for_team(client, team_gid: required("team_gid"), options: {})
+          path = "/teams/{team_gid}/project_templates"
+          path["{team_gid}"] = team_gid
+          Collection.new(parse(client.get(path, options: options)), type: Resource, client: client)
+        end
+
+        # Instantiate a project from a project template
+        #
+        # project_template_gid - [str]  (required) Globally unique identifier for the project template.
+        # options - [Hash] the request I/O options
+        # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
+        # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
+        # data - [Hash] the attributes to POST
+        def instantiate_project(client, project_template_gid: required("project_template_gid"), options: {}, **data)
+          path = "/project_templates/{project_template_gid}/instantiateProject"
+          path["{project_template_gid}"] = project_template_gid
+          Job.new(parse(client.post(path, body: data, options: options)).first, client: client)
         end
 
       end
